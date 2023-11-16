@@ -7,7 +7,7 @@ $result = mysqli_query($databaseConnction, "SELECT products.product_name, sales.
 if (mysqli_num_rows($result) > 0) {
     $invoiceData = mysqli_query($databaseConnction, "SELECT * from invoices where invoice_id='" . $_SESSION["invoice_id"] . "'");
     $invoiceDataResult = mysqli_fetch_assoc($invoiceData);
-    $pdf = new FPDF("P", "mm", array(80, 150));
+    $pdf = new FPDF("P", "mm", array(80, (130 + (mysqli_num_rows($result) * 5))));
     $pdf->AddPage();
     $pdf->SetFont('Arial', 'B', 16);
     $pdf->SetXY(10, 10);
