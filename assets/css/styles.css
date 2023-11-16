@@ -63,6 +63,31 @@ ul {
   list-style: none;
   font-weight: bold;
 }
+.sales-card {
+  width: 20%;
+  /* height: 150px; */
+  padding: 2rem 0;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: white;
+  background: rgb(8, 29, 101);
+  background: linear-gradient(
+    222deg,
+    rgba(8, 29, 101, 1) 0%,
+    rgba(0, 201, 177, 1) 100%
+  );
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.date-picker-container {
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .navbar {
   padding: 0;
   background-color: gold;

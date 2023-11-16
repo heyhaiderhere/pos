@@ -38,9 +38,9 @@ if (mysqli_num_rows($result) > 0) {
     $pdf->Cell(10, 10, "Total", 0, 1, "L");
     while ($row = mysqli_fetch_assoc($result)) {
         // echo  $count;
-        $pdf->SetXY(5, $count);
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(10, 10, $row["product_name"], 0, 1, "L");
+        $pdf->SetXY(0, $count);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(100, 10, $row["product_name"], 0, 1, "L");
         $pdf->SetXY(25, $count);
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(10, 10, $row["quantity"], 0, 1, "C");
@@ -61,6 +61,8 @@ if (mysqli_num_rows($result) > 0) {
     $pdf->Cell(10, 10, $invoiceDataResult["total_amount"], 0, 1, "C");
     $pdf->SetFont('Arial', 'B', 20);
     $pdf->Cell(0, 10, $invoiceDataResult["payment_status"], 0, 1, "C");
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->Cell(0, 10, "Made by BitByBit: 03243264180", 0, 1, "C");
     // $pdf->Footer();
     $pdf->Output();
 }

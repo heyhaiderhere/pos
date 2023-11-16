@@ -27,25 +27,23 @@ $products = mysqli_query($databaseConnction, "select * from products");
                 0
             ) {
                 while ($row = mysqli_fetch_assoc($products)) { ?>
-            <divs class="product-card" data-productId="<?php echo $row["product_id"] ?>"
-                data-in-stock="<?php echo $row["in_stock"] ?>">
-                <div class="product-image-container">
-                    <img class="product-image" src="<?php echo $row["product_image"] ?>"
-                        alt="<?php echo $row["product_name"] ?>" />
-                </div>
-                <div class="product-details flex">
-                    <h4 class="product-name">
-                        <?php echo $row["product_name"] ?>
-                    </h4>
-                    <b>
+                    <divs class="product-card" data-productId="<?php echo $row["product_id"] ?>" data-in-stock="<?php echo $row["in_stock"] ?>">
+                        <div class="product-image-container">
+                            <img class="product-image" src="<?php echo $row["product_image"] ?>" alt="<?php echo $row["product_name"] ?>" />
+                        </div>
+                        <div class="product-details flex">
+                            <h4 class="product-name">
+                                <?php echo $row["product_name"] ?>
+                            </h4>
+                            <b>
 
-                        RS:
-                        <span class="unit-price">
-                            <?php echo $row["selling_price"] ?>
-                        </span>
-                    </b>
-                </div>
-            </divs>
+                                RS:
+                                <span class="unit-price">
+                                    <?php echo $row["selling_price"] ?>
+                                </span>
+                            </b>
+                        </div>
+                    </divs>
             <?php
 
                 }
@@ -65,16 +63,12 @@ $products = mysqli_query($databaseConnction, "select * from products");
             <div style="justify-self: start;" class="sell-products"></div>
             <div class="sell-billing">
                 <div class="form-check w-100 form-switch d-flex align-items-center gap-2 justify-content-around">
-                    <input class="form-check-input sell-and-dinning" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                    <label style="font-size: 1.5rem;" class="form-check-label sell-and-dinning-label"
-                        for="flexSwitchCheckDefault">Sell</label>
+                    <input class="form-check-input sell-and-dinning" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label style="font-size: 1.5rem;" class="form-check-label sell-and-dinning-label" for="flexSwitchCheckDefault">Sell</label>
                 </div>
                 <div class="form-check w-100 form-switch d-flex align-items-center gap-2 justify-content-around">
-                    <input class="form-check-input payment-status" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                    <label style="font-size: 1.5rem;" class="form-check-label payment-status-label"
-                        for="flexSwitchCheckDefault">unpaid</label>
+                    <input class="form-check-input payment-status" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label style="font-size: 1.5rem;" class="form-check-label payment-status-label" for="flexSwitchCheckDefault">unpaid</label>
                 </div>
                 <div class="billing-data">
                     <p style="font-weight: 500;"> Sub Total</p>
@@ -88,31 +82,31 @@ $products = mysqli_query($databaseConnction, "select * from products");
     <script src="./assets/js/jquery.js"></script>
     <script src="./assets/js/index.js"></script>
     <script>
-    $(".print-bill").click(function() {
-        if (productSellArray.length === 0) return
-        const subTotal = productSellArray.reduce((acc, item) => {
-            let subtotal = item.unitPrice * item.quantity;
-            return acc + subtotal;
-        }, 0);
-        $.post("./controller/handleInvoice.php", {
-            data: {
-                products: productSellArray,
-                subTotal,
-                orderType: $(".sell-and-dinning-label").text(),
-                paymentStatus: $(".payment-status-label").text(),
-            }
-        }, function(data, status) {
-            console.log(status)
-            productSellArray = [];
-            billingData.innerText = ""
-            sellSection.innerHTML = "";
-            renderSellList(productSellArray);
-            location.href = "views/invoice.php"
+        $(".print-bill").click(function() {
+            if (productSellArray.length === 0) return
+            const subTotal = productSellArray.reduce((acc, item) => {
+                let subtotal = item.unitPrice * item.quantity;
+                return acc + subtotal;
+            }, 0);
+            $.post("./controller/handleInvoice.php", {
+                data: {
+                    products: productSellArray,
+                    subTotal,
+                    orderType: $(".sell-and-dinning-label").text(),
+                    paymentStatus: $(".payment-status-label").text(),
+                }
+            }, function(data, status) {
+                console.log(status)
+                productSellArray = [];
+                billingData.innerText = ""
+                sellSection.innerHTML = "";
+                renderSellList(productSellArray);
+                location.href = "views/invoice.php"
 
+            });
+
+            console.log(productSellArray)
         });
-
-        console.log(productSellArray)
-    });
     </script>
 </body>
 

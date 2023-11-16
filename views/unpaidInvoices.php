@@ -28,16 +28,15 @@ $results = mysqli_query($databaseConnction, "SELECT * FROM invoices where paymen
             if (mysqli_num_rows($results) > 0) {
                 while ($row = mysqli_fetch_assoc($results)) {
             ?>
-            <div class="unpaid-invoice-card">
-                <p>Invoice No: <span class="fw-bold"> <?php echo $row["invoice_id"]; ?></span></php>
-                <p>Order Type:<span class="fw-bold"> <?php echo $row["order_type"]; ?></span></php>
-                <p>Payment Status: <span class="fw-bold"> <?php echo $row["payment_status"]; ?></span></php>
-                <p>Amount:<span class="fw-bold"> <?php echo $row["total_amount"]; ?></span></php>
-                <form action="../controller/handlePayUnpaidInvoices.php?invoiceId=<?php echo $row["invoice_id"]; ?>"
-                    method="post">
-                    <button class="btn btn-dark mt-2" type="submit">Pay this Invoice</button>
-                </form>
-            </div>
+                    <div class="unpaid-invoice-card">
+                        <p>Invoice No: <span class="fw-bold"> <?php echo $row["invoice_id"]; ?></span></php>
+                        <p>Order Type:<span class="fw-bold"> <?php echo $row["order_type"]; ?></span></php>
+                        <p>Payment Status: <span class="fw-bold"> <?php echo $row["payment_status"]; ?></span></php>
+                        <p>Amount:<span class="fw-bold"> <?php echo $row["total_amount"]; ?></span></php>
+                        <form action="../controller/handlePayUnpaidInvoices.php?invoiceId=<?php echo $row["invoice_id"]; ?>" method="post">
+                            <button class="btn btn-dark mt-2" type="submit">Pay this Invoice</button>
+                        </form>
+                    </div>
             <?php
                 }
             } else {
