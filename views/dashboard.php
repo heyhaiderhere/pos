@@ -1,15 +1,15 @@
 <?php
 include_once "../connection.php";
-$result = mysqli_query($databaseConnction, "SELECT SUM(total_amount) AS today_sales from invoices where payment_status='paid' AND DATE(punch_time) = CURDATE()");
-$sales = mysqli_fetch_assoc($result);
-$profitResults = mysqli_query($databaseConnction, "SELECT SUM(((products.selling_price - products.cost_price)*sales.quantity)) AS profit from sales JOIN products on sales.product_id=products.product_id JOIN invoices ON invoices.invoice_id = sales.invoice_id where invoices.payment_status='paid' AND DATE(invoices.punch_time)=CURDATE();");
-$profit = mysqli_fetch_assoc($profitResults);
+$salesStatement = $db->prepare("SELECT SUM(total_amount) AS today_sales from invoices where payment_status='paid' AND DATE(punch_time) = CURDATE()");
+
+$salesStatement->execute();
+$sales = $salesStatement->get_result()->fetch_assoc();
 
 
+$profitStatement = $db->prepare("SELECT SUM(((products.selling_price - products.cost_price)*sales.quantity)) AS profit from sales JOIN products on sales.product_id=products.product_id JOIN invoices ON invoices.invoice_id = sales.invoice_id where invoices.payment_status='paid' AND DATE(invoices.punch_time)=CURDATE();");
+$profitStatement->execute();
+$profit = $profitStatement->get_result()->fetch_assoc();
 
-// echo "<pre>";
-// print_r(mysqli_fetch_assoc($result));
-// echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="en">

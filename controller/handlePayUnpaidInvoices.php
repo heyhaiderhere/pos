@@ -1,8 +1,14 @@
 <?php
 include_once "../connection.php";
-echo $_GET['invoiceId'];
-if ($result = mysqli_query($databaseConnction, "UPDATE invoices SET payment_status='paid' where invoice_id='" . $_GET["invoiceId"] . "'")) {
+$statement = $db->prepare("UPDATE invoices SET payment_status='paid' where invoice_id=?");
+$statement->bind_param("i",  $_GET["invoiceId"]);
+$statement->execute();
+
+if ($statement->affected_rows > 0) {
     header("location: ../views/unpaidInvoices.php");
 } else {
-    echo mysqli_error($databaseConnction);
+    echo "<h2>This invoice is already paid</h2>";
 }
+
+$statement->close();
+$db->close();

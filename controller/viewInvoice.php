@@ -1,19 +1,16 @@
 <?php
 include_once "../connection.php";
-require('fpdf186/fpdf.php');
-session_start();
+require('../views/fpdf186/fpdf.php');
 $count = 60;
 $statement = $db->prepare("SELECT products.product_name, sales.unit_price, sales.sales_id, sales.quantity, invoices.order_type from sales INNER JOIN products on sales.product_id=products.product_id JOIN invoices ON sales.invoice_id=invoices.invoice_id where sales.invoice_id =?");
-$statement->bind_param("i", $_SESSION["invoice_id"]);
+$statement->bind_param("i", $_POST["invoice_id"]);
 $statement->execute();
-
-// echo $_SESSION["delevery_charges"];
 
 $result = $statement->get_result();
 if ($result->num_rows > 0) {
-    $invoiceData = mysqli_query($db, "SELECT * from invoices where invoice_id='" . $_SESSION["invoice_id"] . "'");
+    $invoiceData = mysqli_query($db, "SELECT * from invoices where invoice_id='" . $_POST["invoice_id"] . "'");
     $invoiceDataResult = mysqli_fetch_assoc($invoiceData);
-    $pdf = new FPDF("P", "mm", array(80, (130 + ($result->num_rows * 5)) + $count));
+    $pdf = new FPDF("P", "mm", array(80, (130 + ($result->num_rows * 5))));
     $pdf->AddPage();
     $pdf->SetFont('Arial', 'B', 16);
     $pdf->SetXY(10, 10);
@@ -63,33 +60,18 @@ if ($result->num_rows > 0) {
         $count = $count + 5;
     }
     $pdf->Line(0, $count + 5, 80, $count + 5);
-    if (isset($_SESSION["delevery_charges"])) {
-        $pdf->SetXY(45, $count + 5);
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(10, 10, "Delevery Charges:", 0, 1, "R");
-        $pdf->SetXY(65, $count + 5);
-        $pdf->SetFont('Arial', 'B', 8);
-        $pdf->Cell(10, 10, $_SESSION["delevery_charges"], 0, 1, "C");
-    }
-    $pdf->SetXY(45, $count + 10);
+    $pdf->SetXY(45, $count + 5);
     $pdf->SetFont('Arial', '', 8);
-    $pdf->Cell(10, 10, "SubTotal:", 0, 1, "R");
-    $pdf->SetXY(65, $count + 10);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(10, 10, $invoiceDataResult["total_amount"] + $_SESSION["delevery_charges"], 0, 1, "C");
+    $pdf->Cell(10, 10, "SubTotal:", 0, 1, "C");
+    $pdf->SetXY(65, $count + 5);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell(10, 10, $invoiceDataResult["total_amount"], 0, 1, "C");
     $pdf->SetFont('Arial', 'B', 20);
-    $pdf->Cell(0, 20, $invoiceDataResult["payment_status"], 0, 1, "C");
+    $pdf->Cell(0, 10, $invoiceDataResult["payment_status"], 0, 1, "C");
     $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 10, "Cafe King: 03243264180", 0, 1, "C");
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 10, "Software by BitByBit: 03243264180", 0, 1, "C");
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 10, ".", 0, 1, "C");
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(0, 10, ".", 0, 1, "C");
+    $pdf->Cell(0, 10, "Made by BitByBit: 03243264180", 0, 1, "C");
     // $pdf->Footer();
     $pdf->Output();
 }
-// unset($_SESSION["delevery_charges"]);
 // ini_set('display_errors`', 1);
 // error_reporting(E_ALL);

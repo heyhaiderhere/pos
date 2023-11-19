@@ -193,6 +193,9 @@ ul {
   justify-content: center;
   gap: 0.5rem;
 }
+.out-of-stock {
+  filter: grayscale(1);
+}
 .product-card {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 10px;
@@ -208,6 +211,12 @@ ul {
   /* height: 300px; */
   max-height: 250px;
   transition: all 150ms ease-in-out;
+}
+.order-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
 }
 .add-new:hover {
   background-color: rgb(175, 175, 175);

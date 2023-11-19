@@ -1,8 +1,11 @@
 <?php
 include_once "../connection.php";
 
-$product = mysqli_query($databaseConnction, "SELECT * FROM products where product_id='" . $_GET["product_id"] . "'");
-$row = mysqli_fetch_assoc($product);
+$product = $db->prepare("SELECT * FROM products where product_id=?");
+$product->bind_param("i", $_GET["product_id"]);
+$product->execute();
+$row = $product->get_result()->fetch_assoc();
+// $row = mysqli_fetch_assoc($product)
 
 // var_dump();
 ?>

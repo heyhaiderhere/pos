@@ -1,8 +1,9 @@
 <?php
 include_once "../connection.php";
 
-$results = mysqli_query($databaseConnction, "SELECT * FROM invoices where payment_status ='unpaid'");
-
+$results = $db->prepare("SELECT * FROM invoices where payment_status ='unpaid'");
+$results->execute();
+$data = $results->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,18 +26,23 @@ $results = mysqli_query($databaseConnction, "SELECT * FROM invoices where paymen
         <a href="http://localhost/pos/" class="mb-2 btn btn-dark">Back</a>
         <div class="main-unpaid-wrapper">
             <?php
-            if (mysqli_num_rows($results) > 0) {
-                while ($row = mysqli_fetch_assoc($results)) {
+            if ($data->num_rows > 0) {
+                while ($row = $data->fetch_assoc()) {
             ?>
-                    <div class="unpaid-invoice-card">
-                        <p>Invoice No: <span class="fw-bold"> <?php echo $row["invoice_id"]; ?></span></php>
-                        <p>Order Type:<span class="fw-bold"> <?php echo $row["order_type"]; ?></span></php>
-                        <p>Payment Status: <span class="fw-bold"> <?php echo $row["payment_status"]; ?></span></php>
-                        <p>Amount:<span class="fw-bold"> <?php echo $row["total_amount"]; ?></span></php>
-                        <form action="../controller/handlePayUnpaidInvoices.php?invoiceId=<?php echo $row["invoice_id"]; ?>" method="post">
-                            <button class="btn btn-dark mt-2" type="submit">Pay this Invoice</button>
-                        </form>
-                    </div>
+            <div class="unpaid-invoice-card">
+                <p>Invoice No: <span class="fw-bold"> <?php echo $row["invoice_id"]; ?></span></php>
+                <p>Order Type:<span class="fw-bold"> <?php echo $row["order_type"]; ?></span></php>
+                <p>Payment Status: <span class="fw-bold"> <?php echo $row["payment_status"]; ?></span></php>
+                <p>Amount:<span class="fw-bold"> <?php echo $row["total_amount"]; ?></span></php>
+                <form action="../controller/handlePayUnpaidInvoices.php?invoiceId=<?php echo $row["invoice_id"]; ?>"
+                    method="post">
+                    <button class="btn btn-dark mt-2" type="submit">Pay this Invoice</button>
+                </form>
+                <form action="../controller/handleCancelUnpaid.php?invoiceId=<?php echo $row["invoice_id"]; ?>"
+                    method="post">
+                    <button class="btn btn-dark mt-2" type="submit">Cancel Order</button>
+                </form>
+            </div>
             <?php
                 }
             } else {

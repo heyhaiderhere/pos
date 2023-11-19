@@ -1,6 +1,6 @@
 <?php
 include_once "../connection.php";
-$result = mysqli_query($databaseConnction, "SELECT SUM(total_amount) AS today_sales from invoices where payment_status='paid' AND DATE(punch_time) = CURDATE()");
+$result = mysqli_query($db, "SELECT SUM(total_amount) AS today_sales from invoices where payment_status='paid' AND DATE(punch_time) = CURDATE()");
 $sales = mysqli_fetch_assoc($result);
 
 // echo "<pre>";
@@ -41,6 +41,8 @@ $sales = mysqli_fetch_assoc($result);
                         <th scope="col">Order Type</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Order time</th>
+                        <th scope="col">View Bill</th>
+
                         <!-- <th scope="col">Handle</th> -->
                     </tr>
                 </thead>
@@ -68,7 +70,10 @@ datePicker.addEventListener("click", (e) => {
         $.each(data, function(index, row) {
             var newRow = '<tr><td>' + row.invoice_id + '</td><td>' + row.order_type +
                 '</td><td>' + row
-                .total_amount + '</td><td>' + row.punch_time + '</td></tr>';
+                .total_amount + '</td><td>' + row.punch_time +
+                '</td> <td><form action="../controller/viewInvoice.php" method="post"><input type="hidden" value=' +
+                row.invoice_id +
+                ' name="invoice_id"/> <button class="btn btn-dark" type="submit">View Bill</button></form></td></tr>';
             $('#tableBody').append(newRow);
         });
     })

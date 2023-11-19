@@ -1,6 +1,9 @@
 <?php
 include_once "../connection.php";
-$products = mysqli_query($databaseConnction, "select * from products");
+$statement =  $db->prepare("select * from products");
+$statement->execute();
+$products = $statement->get_result();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +36,7 @@ $products = mysqli_query($databaseConnction, "select * from products");
             </thead>
             <tbody>
                 <?php
-                while ($row = mysqli_fetch_assoc($products)) {
+                while ($row = $products->fetch_assoc()) {
                 ?>
 
                     <tr class="manage-products-row">

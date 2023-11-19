@@ -1,9 +1,8 @@
 <?php
 include_once "./connection.php";
-// echo uniqid();
-$products = mysqli_query($databaseConnction, "select * from products");
-// session_start();
-// echo $_SESSION["invoice_id"];
+$statement = $db->prepare("select * from products");
+$statement->execute();
+$products = $statement->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +27,7 @@ $products = mysqli_query($databaseConnction, "select * from products");
                     mysqli_num_rows($products) >
                     0
                 ) {
-                    while ($row = mysqli_fetch_assoc($products)) { ?>
+                    while ($row = $products->fetch_assoc()) { ?>
                         <divs class="product-card" data-productId="<?php echo $row["product_id"] ?>" data-in-stock="<?php echo $row["in_stock"] ?>">
                             <div class="product-image-container">
                                 <img class="product-image" src="<?php echo $row["product_image"] ?>" alt="<?php echo $row["product_name"] ?>" />
@@ -64,9 +63,15 @@ $products = mysqli_query($databaseConnction, "select * from products");
             <div class="sell-section">
                 <div style="justify-self: start;" class="sell-products"></div>
                 <div class="sell-billing">
-                    <div class="form-check w-100 form-switch d-flex align-items-center gap-2 justify-content-around">
-                        <input class="form-check-input sell-and-dinning" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <label style="font-size: 1.5rem;" class="form-check-label sell-and-dinning-label" for="flexSwitchCheckDefault">Sell</label>
+                    <div class="order-type">
+                        <div>
+
+                            <input type="radio" name="group1" checked value="sell" onchange="getValueOnChange('group1')">sell
+                            <input type="radio" name="group1" value="dinning" onchange="getValueOnChange('group1')">dinning
+                            <input type="radio" name="group1" value="delevery" onchange="getValueOnChange('group1')">
+                            delevery
+                        </div>
+                        <div id="selectedValue"></div>
                     </div>
                     <div class="form-check w-100 form-switch d-flex align-items-center gap-2 justify-content-around">
                         <input class="form-check-input payment-status" type="checkbox" role="switch" id="flexSwitchCheckDefault">
@@ -92,25 +97,68 @@ $products = mysqli_query($databaseConnction, "select * from products");
                 let subtotal = item.unitPrice * item.quantity;
                 return acc + subtotal;
             }, 0);
-            $.post("./controller/handleInvoice.php", {
-                data: {
-                    products: productSellArray,
-                    subTotal,
-                    orderType: $(".sell-and-dinning-label").text(),
-                    paymentStatus: $(".payment-status-label").text(),
+            let postData = {
+                products: productSellArray,
+                subTotal,
+                orderType: getSelectedValue("group1"),
+                paymentStatus: $(".payment-status-label").text(),
+            }
+            if (getSelectedValue("group1") === "delevery") {
+                postData = {
+                    ...postData,
+                    deleveryCharges: $(".delevery-charges").val()
                 }
+            }
+            console.log(postData)
+            $.post("./controller/handleInvoice.php", {
+                data: postData
             }, function(data, status) {
                 console.log(status)
                 productSellArray = [];
                 billingData.innerText = ""
                 sellSection.innerHTML = "";
                 renderSellList(productSellArray);
-                location.href = "views/invoice.php"
-
+                window.open(
+                    'http://localhost/pos/views/invoice.php',
+                    '_blank'
+                );
+                location.reload()
             });
 
-            console.log(productSellArray)
         });
+
+        function getValueOnChange(groupName) {
+            var radioButtons = document.getElementsByName(groupName);
+
+            for (var i = 0; i < radioButtons.length; i++) {
+                if (radioButtons[i].checked) {
+                    var selectedValue = radioButtons[i].value;
+                    if (selectedValue === "delevery") {
+                        const deleveryChargesInput = document.createElement("input");
+                        deleveryChargesInput.type = "number";
+                        deleveryChargesInput.classList.add("delevery-charges")
+                        deleveryChargesInput.placeholder = "Delevery Charges";
+                        document.querySelector("#selectedValue").append(deleveryChargesInput);
+
+                    } else {
+                        document.querySelector("#selectedValue").innerHTML = ""
+                    }
+                    return;
+                }
+            }
+
+        }
+
+        function getSelectedValue(groupName) {
+            var radioButtons = document.getElementsByName(groupName);
+
+            for (var i = 0; i < radioButtons.length; i++) {
+                if (radioButtons[i].checked) {
+                    var selectedValue = radioButtons[i].value;
+                    return selectedValue;
+                }
+            }
+        }
     </script>
 </body>
 

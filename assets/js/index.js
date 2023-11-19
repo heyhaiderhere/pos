@@ -9,11 +9,11 @@ const sellAndDinning = document.querySelector(".sell-and-dinning");
 const sellAndDinningLabel = document.querySelector(".sell-and-dinning-label");
 const paymentStatus = document.querySelector(".payment-status");
 const paymentStatusLabel = document.querySelector(".payment-status-label");
-sellAndDinning.addEventListener("change", (e) => {
-  e.target.checked
-    ? (sellAndDinningLabel.innerText = "Dinning")
-    : (sellAndDinningLabel.innerText = "Sell");
-});
+// sellAndDinning.addEventListener("change", (e) => {
+//   e.target.checked
+//     ? (sellAndDinningLabel.innerText = "Dinning")
+//     : (sellAndDinningLabel.innerText = "Sell");
+// });
 paymentStatus.addEventListener("change", (e) => {
   e.target.checked
     ? (paymentStatusLabel.innerText = "paid")
@@ -22,8 +22,17 @@ paymentStatus.addEventListener("change", (e) => {
 // console.log(quantityButtons);
 let productSellArray = [];
 products.forEach((product) => {
+  if (product.dataset.inStock < 1) {
+    product.classList.add("out-of-stock");
+    return;
+  }
   product.addEventListener("click", (e) => {
     // console.log(product.querySelector(".product-image").getAttribute("src"));
+
+    if (product.dataset.inStock < 1) {
+      alert("This item is not in stock");
+      return;
+    }
     let found = false;
     for (let i = 0; i < productSellArray.length; i++) {
       if (productSellArray[i]?.productId === product.dataset.productid) {

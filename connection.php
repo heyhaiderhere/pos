@@ -1,8 +1,10 @@
 <?php
-$databaseConnction = mysqli_connect("localhost", "root", "", "pos");
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pos";
+$db = new mysqli($servername, $username, $password, $dbname);
 
-// function mysqli_query($databaseConnction,$query)
-// {
-
-//     return mysqli_query($databaseConnction, $query);
-// }
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
+}
